@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deno-server
+  namespace: deno-abaf1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deno
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: deno
+    spec:
+      containers:
+        - env:
+            - name: TWITTER_CONSUMER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: twitter
+                  key: consumerkey
+            - name: TWITTER_CONSUMER_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: twitter
+                  key: consumersecret
+          image: imageUrl
+          imagePullPolicy: IfNotPresent
+          name: server
+          ports:
+            - containerPort: 8080
+              name: exposed
+              protocol: TCP
+          resources: {}
+          securityContext:
+            runAsGroup: 1001
+            runAsNonRoot: true
+            runAsUser: 1001
