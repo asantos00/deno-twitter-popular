@@ -25,7 +25,7 @@ const getBearerToken = async () => {
     return token;
   }
 
-  const keyAndSecretB65 = btoa(
+  const keyAndSecretB64 = btoa(
     `${Twitter.consumerKey}:${Twitter.consumerSecret}`,
   );
   try {
@@ -35,7 +35,7 @@ const getBearerToken = async () => {
         method: "POST",
         headers: new Headers([
           ["content-type", "application/x-www-form-urlencoded;charset=UTF-8"],
-          ["authorization", `Basic ${keyAndSecretB65}`],
+          ["authorization", `Basic ${keyAndSecretB64}`],
         ]),
         body: "grant_type=client_credentials",
       },
