@@ -26,7 +26,7 @@ const getBearerToken = async () => {
   }
 
   const keyAndSecretB64 = btoa(
-    `${Twitter.consumerKey}:${Twitter.consumerSecret}`,
+    `${Twitter.consumerKey}:${Twitter.consumerSecret}`
   );
   try {
     const response: TwitterAuthResponse = await fetch(
@@ -38,17 +38,16 @@ const getBearerToken = async () => {
           ["authorization", `Basic ${keyAndSecretB64}`],
         ]),
         body: "grant_type=client_credentials",
-      },
-    )
-      .then((res) => {
-        if (res.status === 200) {
-          return res.json();
-        }
+      }
+    ).then((res) => {
+      if (res.status === 200) {
+        return res.json();
+      }
 
-        console.error(res);
+      console.error(res.json());
 
-        throw res;
-      });
+      throw res;
+    });
 
     return response.access_token;
   } catch (e) {
@@ -59,19 +58,11 @@ const getBearerToken = async () => {
 export const search = async (username: string) => {
   const bearerToken = await getBearerToken();
 
-  if (!bearerToken) {
-    return Promise.reject("Couldn't get token");
-  }
-
   const query = `(from:${username}) min_faves:5`;
-  return fetch(
-    `${Twitter.baseUrl}${Twitter.apis.search}?q=${query}`,
-    {
-      headers: new Headers([
-        ["content-type", "application/json"],
-        ["authorization", `Bearer ${bearerToken}`],
-      ]),
-    },
-  )
-    .then((res) => res.json());
+  return fetch(`${Twitter.baseUrl}${Twitter.apis.search}?q=${query}`, {
+    headers: new Headers([
+      ["content-type", "application/json"],
+      ["authorization", `Bearer ${bearerToken}`],
+    ]),
+  }).then((res) => res.json());
 };

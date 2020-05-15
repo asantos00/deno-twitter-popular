@@ -34,7 +34,9 @@ for await (const req of s) {
   let routes: RouteHandler[] = [PopularRoutes.byUser];
   routes.unshift(createIndexRoute(routes));
 
+  console.log(JSON.stringify({ body: req.body, url: req.url }, null, 4));
   const matchedRoute = routes.find((route) => route.match(req.url));
+  console.log({ matchedRoute });
   if (matchedRoute) {
     try {
       await matchedRoute.execute(req);

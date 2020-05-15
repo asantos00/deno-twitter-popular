@@ -4,7 +4,7 @@ metadata:
   name: deno-server
   namespace: deno-abaf1
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: deno
@@ -30,7 +30,7 @@ spec:
                 secretKeyRef:
                   name: twitter
                   key: consumersecret
-          image: imageUrl
+          image: image-url
           imagePullPolicy: IfNotPresent
           name: server
           ports:
