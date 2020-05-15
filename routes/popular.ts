@@ -3,6 +3,8 @@ import { RouteHandler } from "./types.ts";
 import * as TwitterClient from "../twitter/client.ts";
 
 export const byUser: RouteHandler = {
+  name: "getPopularTweetsByUser - /popular/:twitterHandleWithout@",
+  description: "Gets 15 popular tweets from the provided handle",
   url: /(?!\/popular\/)\w{0,30}$/g,
   match(url: string) {
     return !!url.match(this.url);

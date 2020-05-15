@@ -10,8 +10,29 @@ if (!Config.twitter.consumerKey || !Config.twitter.consumerSecret) {
   throw "Twitter client keys not found";
 }
 
+const createIndexRoute = (routes: RouteHandler[]): RouteHandler => ({
+  name: "routeList - /",
+  description: "Lists all the available routes",
+  url: "/",
+  match(url) {
+    return url === this.url;
+  },
+  async execute(req) {
+    req.respond({
+      status: 200,
+      body: JSON.stringify({
+        routes: routes.map((r) => ({
+          name: r.name,
+          description: r.description,
+        })),
+      }),
+    });
+  },
+});
+
 for await (const req of s) {
-  const routes: RouteHandler[] = [PopularRoutes.byUser];
+  let routes: RouteHandler[] = [PopularRoutes.byUser];
+  routes.unshift(createIndexRoute(routes));
 
   const matchedRoute = routes.find((route) => route.match(req.url));
   if (matchedRoute) {
