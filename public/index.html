@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Get popular tweets</title>
+  </head>
+  <body>
+    <script type="module">
+      import * as client from "./client.js";
+
+      document.querySelector("#submit").addEventListener("click", fetchTwitter);
+
+      async function fetchTwitter(event) {
+        const value = document.querySelector("#handle").value;
+        const result = await client.popular(value);
+
+        const tweetContainer = document.querySelector("#content");
+        tweetContainer.innerHTML = "";
+
+        result.statuses.forEach((status) => {
+          const node = document.createTextNode(
+            `${status.created_at} - ${status.text}`
+          );
+
+          const wrapperNode = document.createElement("p");
+          wrapperNode.appendChild(node);
+
+          tweetContainer.appendChild(wrapperNode);
+        });
+      }
+    </script>
+
+    <input type="text" id="handle" placeholder="twitter handler" />
+    <input type="submit" id="submit" />
+    <div id="content"></div>
+  </body>
+</html>

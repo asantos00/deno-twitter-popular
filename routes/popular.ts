@@ -1,16 +1,30 @@
 import { ServerRequest } from "../deps.ts";
 import { RouteHandler } from "./types.ts";
+import Config from "../config.ts";
 import * as TwitterClient from "../twitter/client.ts";
 
+const respondWithCors = (req: ServerRequest, body: any) => {
+  const headers = new Headers();
+  headers.append("access-control-allow-origin", "*");
+  headers.append(
+    "access-control-allow-headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Range"
+  );
+  return req.respond({
+    ...body,
+    headers,
+  });
+};
+
 export const byUser: RouteHandler = {
-  name: "getPopularTweetsByUser - /:twitterHandleWithout@",
+  name: "getPopularTweetsByUser - /:twitterHandle",
   description: "Gets 15 popular tweets from the provided handle",
   url: /\/popular\/\w+/g,
   match(url: string) {
     return !!url.match(this.url);
   },
   async execute(req: ServerRequest) {
-    const [_, , handle] = req.url.split("/");
+    let [_, , handle] = req.url.split("/");
     if (!handle) {
       return req.respond({
         status: 401,

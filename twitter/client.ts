@@ -12,12 +12,36 @@ const Twitter = {
   },
 };
 
+/**
+ * The authentication response from Twitter
+ */
 interface TwitterAuthResponse {
   access_token: string;
   token_type: string;
 }
 
-console.log("Loaded with configs", Twitter.consumerKey, Twitter.consumerSecret);
+/**
+ * The required authentication params for twitter client
+ */
+interface AuthConfig {
+  key: string;
+  secret: string;
+}
+
+/**
+ * The response from Twitter API
+ */
+export interface TweetResponse {
+  statuses: Tweet[];
+}
+
+/**
+ * Fields in a tweet
+ */
+export interface Tweet {
+  created_at: Date;
+  text: string;
+}
 
 let token: string = "";
 const getBearerToken = async () => {
