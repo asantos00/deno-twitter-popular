@@ -1,8 +1,6 @@
 import Config from "../config.ts";
 
 const Twitter = {
-  consumerKey: Config.twitter.consumerKey,
-  consumerSecret: Config.twitter.consumerSecret,
   baseUrl: "https://api.twitter.com",
   apis: {
     auth: "/oauth2/token",
@@ -44,14 +42,12 @@ export interface Tweet {
 }
 
 let token: string = "";
-const getBearerToken = async () => {
+const getBearerToken = async ({ key, secret }: AuthConfig) => {
   if (token !== "") {
     return token;
   }
 
-  const keyAndSecretB64 = btoa(
-    `${Twitter.consumerKey}:${Twitter.consumerSecret}`
-  );
+  const keyAndSecretB64 = btoa(`${key}:${secret}`);
   try {
     const response: TwitterAuthResponse = await fetch(
       `${Twitter.baseUrl}${Twitter.apis.auth}`,
@@ -79,8 +75,16 @@ const getBearerToken = async () => {
   }
 };
 
-export const search = async (username: string) => {
-  const bearerToken = await getBearerToken();
+/**
+ * Searches for the recent tweets of the provided username that have more than 5 likes
+ *
+ * @param username
+ */
+export const search = async (
+  config: AuthConfig,
+  username: string
+): Promise<Tweet[]> => {
+  const bearerToken = await getBearerToken(config);
 
   const query = `(from:${username}) min_faves:5`;
   return fetch(`${Twitter.baseUrl}${Twitter.apis.search}?q=${query}`, {

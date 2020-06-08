@@ -33,8 +33,14 @@ export const byUser: RouteHandler = {
     }
 
     try {
-      const searchResult = await TwitterClient.search(handle);
-      return req.respond({
+      const searchResult = await TwitterClient.search(
+        {
+          key: Config.twitter.consumerKey,
+          secret: Config.twitter.consumerSecret,
+        },
+        handle
+      );
+      return respondWithCors(req, {
         status: 200,
         body: JSON.stringify(searchResult),
       });
