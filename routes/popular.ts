@@ -17,14 +17,14 @@ const respondWithCors = (req: ServerRequest, body: any) => {
 };
 
 export const byUser: RouteHandler = {
-  name: "getPopularTweetsByUser - /:twitterHandle",
+  name: "getPopularTweetsByUser - /:twitterHandleWithout",
   description: "Gets 15 popular tweets from the provided handle",
   url: /\/popular\/\w+/g,
   match(url: string) {
     return !!url.match(this.url);
   },
   async execute(req: ServerRequest) {
-    let [_, , handle] = req.url.split("/");
+    const [_, , handle] = req.url.split("/");
     if (!handle) {
       return req.respond({
         status: 401,
